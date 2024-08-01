@@ -1,0 +1,10 @@
+{
+  "realm": "MyRealm",
+  "auth-server-url": "http://localhost:8080",
+  "ssl-required": "external",
+  "resource": "app1",
+  "credentials": {
+    "secret": "oBsPvqrEOdDTw63Ev6pxQ2jRarig3nTH"
+  },
+  "confidential-port": 0
+}
