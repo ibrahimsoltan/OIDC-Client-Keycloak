@@ -59,7 +59,7 @@ public class SecurityConfig {
     private ClientRegistration keycloakClientRegistration() {
         return ClientRegistration.withRegistrationId("keycloak")
                 .clientId("app1") // Client ID registered in Keycloak
-                .clientSecret("oBsPvqrEOdDTw63Ev6pxQ2jRarig3nTH") // Client secret from Keycloak
+                .clientSecret("UJK71YF1DluubHcTndZvsc4hCUrIFLvw") // Client secret from Keycloak
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE) // Use authorization code grant type
                 .redirectUri("{baseUrl}/login/oauth2/code/{registrationId}") // Redirect URI for OAuth2 login
                 .scope("openid", "profile", "email") // Scopes requested

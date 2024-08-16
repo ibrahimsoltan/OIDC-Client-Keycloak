@@ -1,12 +1,115 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Home Page</title>
+    <meta charset="UTF-8">
+    <title>Customer Support Dashboard</title>
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #eef2f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background: #005a8e;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .sidebar h1 {
+            margin: 0;
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+        }
+        .sidebar ul li {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .sidebar ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px;
+            display: block;
+            width: 100%;
+            text-align: center;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .sidebar ul li a:hover, .sidebar ul li a.active {
+            background: #ff6f61;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .content h1 {
+            color: #333333;
+            text-align: center;
+        }
+        .content p {
+            color: #555555;
+            text-align: center;
+        }
+        .content form {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .content form input[type="submit"], .content form a {
+            background: #005a8e;
+            color: #ffffff;
+            border: 0;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            margin: 10px;
+            border-radius: 5px;
+        }
+        .content form input[type="submit"]:hover, .content form a:hover {
+            background: #ff6f61;
+        }
+        footer {
+            padding: 20px;
+            color: #ffffff;
+            background-color: #005a8e;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
 </head>
 <body>
-<h1>Welcome, <span th:text="${remoteUser}">User</span>!</h1>
-<form th:action="@{/logout}" method="post">
-    <input type="submit" value="Logout"/>
-</form>
+<div class="sidebar">
+    <h1>Support Dashboard</h1>
+    <ul>
+        <li><a href="/" class="active">Home</a></li>
+        <li><a href="#">Support</a></li>
+        <li><a href="#">Tickets</a></li>
+        <li><a href="#">FAQ</a></li>
+    </ul>
+</div>
+<div class="content">
+    <h1>Welcome, <span th:text="${remoteUser}">User</span>!</h1>
+    <p>You can manage your tickets, access support, and more from this dashboard.</p>
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="Logout"/>
+    </form>
+</div>
+<footer>
+    <p>Support Application &copy; 2024</p>
+</footer>
 </body>
 </html>
