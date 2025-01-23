@@ -2,9 +2,9 @@
   "realm": "MyRealm",
   "auth-server-url": "http://localhost:8080",
   "ssl-required": "external",
-  "resource": "app1",
+  "resource": "app2",
   "credentials": {
-    "secret": "oBsPvqrEOdDTw63Ev6pxQ2jRarig3nTH"
+    "secret": "RUJz8JLGDUD3x4lOK18LWHP4Wn1xp9Zj"
   },
   "confidential-port": 0
 }

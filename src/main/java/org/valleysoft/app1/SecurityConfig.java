@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
@@ -13,8 +14,14 @@ import org.springframework.security.oauth2.client.registration.InMemoryClientReg
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -45,7 +52,7 @@ public class SecurityConfig {
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                 )
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()));
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter())));
         return http.build();
     }
 
@@ -58,8 +65,8 @@ public class SecurityConfig {
     // Define the Keycloak client registration
     private ClientRegistration keycloakClientRegistration() {
         return ClientRegistration.withRegistrationId("keycloak")
-                .clientId("app1") // Client ID registered in Keycloak
-                .clientSecret("UJK71YF1DluubHcTndZvsc4hCUrIFLvw") // Client secret from Keycloak
+                .clientId("app2") // Client ID registered in Keycloak
+                .clientSecret("RUJz8JLGDUD3x4lOK18LWHP4Wn1xp9Zj") // Client secret from Keycloak
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE) // Use authorization code grant type
                 .redirectUri("{baseUrl}/login/oauth2/code/{registrationId}") // Redirect URI for OAuth2 login
                 .scope("openid", "profile", "email") // Scopes requested
@@ -94,4 +101,24 @@ public class SecurityConfig {
             }
         };
     }
+
+    private JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        System.out.println("Inside convertion ");
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwt -> {
+            System.out.println("jwt" + jwt);
+            System.out.println("jwt: " + jwt.getClaims());
+            jwt.getClaims().forEach((key, value) -> System.out.println("Claims: " + key + ": " + value));
+            Collection<GrantedAuthority> authorities = jwt.getClaimAsStringList("groups").stream()
+                    .peek(group -> System.out.println("Processing group: " + group)) // Debugging
+                    .map(group -> group.startsWith("/") ? group.substring(1) : group) // Remove leading '/'
+                    .map(role -> "ROLE_" + role) // Add ROLE_ prefix
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
+            System.out.println("Granted Authorities: " + authorities);
+            return authorities;
+        });
+        return jwtAuthenticationConverter;
+    }
+
 }
